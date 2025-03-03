@@ -1,0 +1,23 @@
+{
+  "name": "e-commerce-app-backend",
+  "version": "1.0.0",
+  "description": "Backend for an e-commerce platform.",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ocastorena/e-commerce-app-backend.git"
+  },
+  "author": "Omar Castorena",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ocastorena/e-commerce-app-backend/issues"
+  },
+  "homepage": "https://github.com/ocastorena/e-commerce-app-backend#readme",
+  "dependencies": {
+    "express": "^4.21.2"
+  }
+}
