@@ -1,15 +1,14 @@
 const express = require("express");
-const { query } = require("./db/db.js");
+const userRoutes = require("./routes/userRoutes");
 
 const app = express();
 const port = 3000;
 
-query("SELECT NOW()");
-
-app.get("/", (req, res) => {
-  res.send("Hello World!");
-});
+app.use(express.json());
+app.use("/", userRoutes);
 
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`);
 });
+
+module.exports = app;
