@@ -31,6 +31,16 @@ const getUserByEmail = async (email) => {
   }
 };
 
+const getUserById = async (id) => {
+  try {
+    const result = await query("SELECT * FROM users WHERE user_id = $1", [id]);
+    return result.rows[0];
+  } catch (err) {
+    console.error("Error fetching user by ID:", err);
+    throw err;
+  }
+};
+
 const updateUserByEmail = async (email, { username, password, address }) => {
   try {
     const result = await query(
@@ -60,6 +70,7 @@ const deleteUserByEmail = async (email) => {
 module.exports = {
   createUser,
   getUserByEmail,
+  getUserById,
   updateUserByEmail,
   deleteUserByEmail,
 };
