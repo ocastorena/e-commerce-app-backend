@@ -2,6 +2,7 @@ const express = require("express");
 const session = require("express-session");
 const passport = require("./config/passportConfig");
 const userRoutes = require("./routes/userRoutes");
+const productRoutes = require("./routes/productRoutes");
 
 const app = express();
 const port = 3000;
@@ -24,6 +25,7 @@ app.use(passport.session());
 
 // Add routes
 app.use("/", userRoutes);
+app.use("/", productRoutes);
 
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`);
