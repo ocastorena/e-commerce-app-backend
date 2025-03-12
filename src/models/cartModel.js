@@ -36,6 +36,18 @@ const getCartByUserId = async (user_id) => {
   }
 };
 
+const getCartById = async (cart_id) => {
+  try {
+    const result = await query("SELECT * FROM carts WHERE cart_id = $1", [
+      cart_id,
+    ]);
+    return result.rows[0];
+  } catch (err) {
+    //console.error("Error fetching cart from database:", err);
+    throw err;
+  }
+};
+
 const deleteCartByUserId = async (user_id) => {
   try {
     const result = await query(
@@ -52,5 +64,6 @@ const deleteCartByUserId = async (user_id) => {
 module.exports = {
   createCart,
   getCartByUserId,
+  getCartById,
   deleteCartByUserId,
 };

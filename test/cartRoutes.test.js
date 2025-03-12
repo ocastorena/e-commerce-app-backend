@@ -70,3 +70,72 @@ describe("Cart Routes", () => {
     });
   });
 });
+
+describe("Cart Routes - Checkout Endpoint", () => {
+  // Use a dedicated test user_id, cart_id, payment_method_id for checkout
+  const testUserId = 2;
+  const testCartId = 10;
+  const testPaymentMethodId = 210;
+
+  // Setup: create a test user, cart, payment method
+  before(async () => {
+    // Insert test user
+    await query(
+      "INSERT INTO users (user_id, username, password, email) VALUES ($1, $2, $3, $4)",
+      [testUserId, "checkoutuser", "password123", "checkout@example.com"]
+    );
+    // Insert payment method for user
+    await query(
+      "INSERT INTO payment_methods (payment_method_id, user_id ) VALUES ($1, $2)",
+      [testPaymentMethodId, testUserId]
+    );
+    // Insert cart for the user
+    const currentDate = new Date();
+    await query(
+      "INSERT INTO carts (cart_id, user_id, created_date) VALUES ($1, $2, $3)",
+      [testCartId, testUserId, currentDate]
+    );
+  });
+
+  // Cleanup: remove test data from orders, carts, and users tables
+  after(async () => {
+    await query("DELETE FROM orders WHERE user_id = $1", [testUserId]);
+    await query("DELETE FROM carts WHERE user_id = $1", [testUserId]);
+    await query("DELETE FROM payment_methods WHERE user_id = $1", [testUserId]);
+    await query("DELETE FROM users WHERE user_id = $1", [testUserId]);
+  });
+
+  describe("POST /cart/:cartId/checkout", () => {
+    it("should successfully checkout a valid cart and create an order", async () => {
+      // Execute
+      const checkoutResponse = await request(app)
+        .post(`/cart/${testCartId}/checkout`)
+        .send({
+          user_id: testUserId,
+          payment_method_id: testPaymentMethodId,
+          total_amount: 100.0,
+        });
+      // Assert
+      expect(checkoutResponse.status).to.equal(201);
+      expect(checkoutResponse.body).to.have.property("order_id");
+      expect(checkoutResponse.body).to.have.property("user_id", testUserId);
+      expect(checkoutResponse.body).to.have.property("total_amount", "100.00");
+
+      // After checkout, the cart should be deleted; verify by trying to fetch the cart
+      const cartFetchResponse = await request(app).get(`/cart/${testUserId}`);
+      expect(cartFetchResponse.status).to.equal(404);
+    });
+
+    it("should return 404 if the cart does not exist", async () => {
+      // Execute
+      const response = await request(app).post(`/cart/9999/checkout`).send({
+        user_id: testUserId,
+        payment_method_id: testPaymentMethodId,
+        total_amount: 100.0,
+      });
+      // Assert
+      expect(response.status).to.equal(404);
+      expect(response.text).to.equal("Cart not found");
+    });
+  });
+});
