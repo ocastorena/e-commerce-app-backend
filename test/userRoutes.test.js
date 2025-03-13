@@ -81,7 +81,7 @@ describe("User Routes", () => {
     describe("Updating a user", () => {
       it("should update an existing user", async () => {
         //Execute
-        const response = await agent.put("/users").send({
+        const response = await agent.put("/users/testuser@example.com").send({
           username: "testuser",
           password: "password123",
           email: "testuser@example.com",

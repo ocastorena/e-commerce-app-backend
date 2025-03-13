@@ -43,15 +43,17 @@ const getUser = async (req, res) => {
 
 const updateUser = async (req, res) => {
   try {
+    const existingEmail = req.params.email;
     const { username, password, email, address } = req.body;
 
     // Hash the password
     const saltRounds = 10;
     const hashedPassword = await bcrypt.hash(password, saltRounds);
 
-    const updatedUser = await updateUserByEmail(email, {
+    const updatedUser = await updateUserByEmail(existingEmail, {
       username,
       password: hashedPassword,
+      email,
       address,
     });
 
