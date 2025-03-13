@@ -41,11 +41,14 @@ const getUserById = async (id) => {
   }
 };
 
-const updateUserByEmail = async (email, { username, password, address }) => {
+const updateUserByEmail = async (
+  existingEmail,
+  { username, password, email, address }
+) => {
   try {
     const result = await query(
-      "UPDATE users SET username = $1, password = COALESCE($2, password), address = $3 WHERE email = $4 RETURNING *",
-      [username, password, address, email]
+      "UPDATE users SET username = $1, password = COALESCE($2, password), email = $3, address = $4 WHERE email = $5 RETURNING *",
+      [username, password, email, address, existingEmail]
     );
     return result.rows[0];
   } catch (err) {
