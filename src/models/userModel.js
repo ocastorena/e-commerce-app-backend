@@ -67,10 +67,50 @@ const deleteUserByEmail = async (email) => {
   }
 };
 
+const getUserCartById = async (user_id) => {
+  try {
+    const result = await query("SELECT * from carts WHERE user_id = $1", [
+      user_id,
+    ]);
+    return result.rows[0];
+  } catch (err) {
+    console.error("Error fetching cart by user_id:", err);
+    throw err;
+  }
+};
+
+const getUserOrdersById = async (user_id) => {
+  try {
+    const result = await query("SELECT * from orders WHERE user_id = $1", [
+      user_id,
+    ]);
+    return result.rows;
+  } catch (err) {
+    console.error("Error fetching orders by user_id:", err);
+    throw err;
+  }
+};
+
+const getUserPaymentMethodsById = async (user_id) => {
+  try {
+    const result = await query(
+      "SELECT * from payment_methods WHERE user_id = $1",
+      [user_id]
+    );
+    return result.rows;
+  } catch (err) {
+    console.error("Error fetching payment methods by user_id:", err);
+    throw err;
+  }
+};
+
 module.exports = {
   createUser,
   getUserByEmail,
   getUserById,
   updateUserByEmail,
   deleteUserByEmail,
+  getUserCartById,
+  getUserOrdersById,
+  getUserPaymentMethodsById,
 };

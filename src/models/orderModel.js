@@ -18,6 +18,31 @@ const createOrder = async (
   }
 };
 
+const getOrderById = async (order_id) => {
+  try {
+    const result = await query("SELECT * FROM orders WHERE order_id = $1", [
+      order_id,
+    ]);
+    return result.rows[0];
+  } catch (err) {
+    throw err;
+  }
+};
+
+const getOrderItemsById = async (order_id) => {
+  try {
+    const result = await query(
+      "SELECT * FROM order_items where order_id = $1",
+      [order_id]
+    );
+    return result.rows;
+  } catch (err) {
+    throw err;
+  }
+};
+
 module.exports = {
   createOrder,
+  getOrderById,
+  getOrderItemsById,
 };
