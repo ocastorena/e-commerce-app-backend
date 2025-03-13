@@ -4,6 +4,7 @@ const passport = require("./config/passportConfig");
 const userRoutes = require("./routes/userRoutes");
 const productRoutes = require("./routes/productRoutes");
 const cartRoutes = require("./routes/cartRoutes");
+const orderRoutes = require("./routes/orderRoutes");
 
 const app = express();
 const port = 3000;
@@ -28,9 +29,10 @@ app.use(passport.session());
 app.use("/", userRoutes);
 app.use("/", productRoutes);
 app.use("/", cartRoutes);
+app.use("/", orderRoutes);
 
 app.listen(port, () => {
-  console.log(`Example app listening on port ${port}`);
+  console.log(`Server app listening on port ${port}`);
 });
 
 module.exports = app;

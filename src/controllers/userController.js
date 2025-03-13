@@ -5,6 +5,9 @@ const {
   getUserByEmail,
   updateUserByEmail,
   deleteUserByEmail,
+  getUserCartById,
+  getUserOrdersById,
+  getUserPaymentMethodsById,
 } = require("../models/userModel");
 
 const addUser = async (req, res) => {
@@ -103,6 +106,45 @@ const logoutUser = async (req, res) => {
   });
 };
 
+const getUserCartByIdController = async (req, res) => {
+  try {
+    const user_id = req.params.user_id;
+    const cart = await getUserCartById(user_id);
+    if (!cart) {
+      return res.status(404).send("Cart not found");
+    }
+    res.status(200).json(cart);
+  } catch (err) {
+    res.status(500).send("Server Error");
+  }
+};
+
+const getUserOrdersByIdController = async (req, res) => {
+  try {
+    const user_id = req.params.user_id;
+    const orders = await getUserOrdersById(user_id);
+    if (!orders) {
+      return res.status(404).send("Orders not found");
+    }
+    res.status(200).json(orders);
+  } catch (err) {
+    res.status(500).send("Server Error");
+  }
+};
+
+const getUserPaymentMethodsByIdController = async (req, res) => {
+  try {
+    const user_id = req.params.user_id;
+    const paymentMethod = await getUserPaymentMethodsById(user_id);
+    if (!paymentMethod) {
+      return res.status(404).send("Payment method not found");
+    }
+    res.status(200).json(paymentMethod);
+  } catch (err) {
+    res.status(500).send("Server Error");
+  }
+};
+
 module.exports = {
   addUser,
   getUser,
@@ -110,4 +152,7 @@ module.exports = {
   deleteUser,
   loginUser,
   logoutUser,
+  getUserCartByIdController,
+  getUserOrdersByIdController,
+  getUserPaymentMethodsByIdController,
 };
