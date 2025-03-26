@@ -1,7 +1,10 @@
 const express = require("express");
 const session = require("express-session");
+const cors = require("cors");
+
 const swaggerSpec = require("./config/swaggerConfig");
 const swaggerUi = require("swagger-ui-express");
+
 const passport = require("./config/passportConfig");
 const userRoutes = require("./routes/userRoutes");
 const productRoutes = require("./routes/productRoutes");
@@ -10,6 +13,8 @@ const orderRoutes = require("./routes/orderRoutes");
 
 const app = express();
 const port = 3000;
+
+app.use(cors());
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
