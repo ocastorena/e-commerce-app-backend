@@ -12,6 +12,7 @@ const {
   getUserOrdersByIdController,
   getUserPaymentMethodsByIdController,
 } = require("../controllers/userController");
+const passport = require("passport");
 
 /**
  * @swagger
@@ -278,5 +279,16 @@ router.post("/login", loginUser);
  *                 $ref: '#/components/schemas/PaymentMethod'
  */
 router.get("/logout", logoutUser);
+
+router.get("/login/facebook", passport.authenticate("facebook"));
+
+router.get(
+  "/login/facebook/callback",
+  passport.authenticate("facebook", { failureRedirect: "/login" }),
+  (req, res) => {
+    // Successful authentication, redirect or respond as needed.
+    res.redirect("/");
+  }
+);
 
 module.exports = router;
