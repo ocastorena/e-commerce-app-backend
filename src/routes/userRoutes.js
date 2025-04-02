@@ -54,7 +54,7 @@ const {
  *       '400':
  *         description: Invalid input.
  */
-router.post("/users", addUser);
+router.post("/users", checkAuthentication, addUser);
 /**
  * @swagger
  * /users/{email}:
@@ -171,7 +171,11 @@ router.delete("/users/:email", checkAuthentication, deleteUser);
  *             schema:
  *               $ref: '#/components/schemas/Cart'
  */
-router.get("/users/:user_id/cart", getUserCartByIdController);
+router.get(
+  "/users/:user_id/cart",
+  checkAuthentication,
+  getUserCartByIdController
+);
 /**
  * @swagger
  * /users/{user_id}/orders:
@@ -196,7 +200,11 @@ router.get("/users/:user_id/cart", getUserCartByIdController);
  *               items:
  *                 $ref: '#/components/schemas/Order'
  */
-router.get("/users/:user_id/orders", getUserOrdersByIdController);
+router.get(
+  "/users/:user_id/orders",
+  checkAuthentication,
+  getUserOrdersByIdController
+);
 /**
  * @swagger
  * /users/{user_id}/payment-methods:
@@ -223,6 +231,7 @@ router.get("/users/:user_id/orders", getUserOrdersByIdController);
  */
 router.get(
   "/users/:user_id/payment-methods",
+  checkAuthentication,
   getUserPaymentMethodsByIdController
 );
 /**
@@ -277,6 +286,6 @@ router.post("/login", loginUser);
  *               items:
  *                 $ref: '#/components/schemas/PaymentMethod'
  */
-router.get("/logout", logoutUser);
+router.get("/logout", checkAuthentication, logoutUser);
 
 module.exports = router;

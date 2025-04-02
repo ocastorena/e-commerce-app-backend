@@ -14,7 +14,12 @@ const orderRoutes = require("./routes/orderRoutes");
 const app = express();
 const port = 3000;
 
-app.use(cors());
+// CORS setup
+const corsOptions = {
+  origin: true,
+  credentials: true,
+};
+app.use(cors(corsOptions));
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
@@ -25,6 +30,10 @@ app.use(
     secret: "your_secret_key",
     resave: false,
     saveUninitialized: false,
+    cookie: {
+      secure: false,
+      httpOnly: true,
+    },
   })
 );
 
@@ -33,6 +42,13 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 // Add routes
+app.get("/session", (req, res) => {
+  if (req.isAuthenticated()) {
+    res.status(200).json({ data: req.user });
+  } else {
+    res.status(401).json({ message: "Not authenticated" });
+  }
+});
 app.use("/", userRoutes);
 app.use("/", productRoutes);
 app.use("/", cartRoutes);
