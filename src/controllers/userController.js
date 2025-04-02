@@ -100,11 +100,18 @@ const loginUser = async (req, res, next) => {
 };
 
 const logoutUser = async (req, res) => {
-  req.logout((err) => {
+  req.logout(function (err) {
     if (err) {
-      return res.status(500).send("Server Error");
+      return next(err);
     }
-    res.status(200).json({ message: "Logged out successfully" });
+    // Optionally destroy the session and clear the session cookie.
+    req.session.destroy((err) => {
+      if (err) {
+        return next(err);
+      }
+      res.clearCookie("connect.sid"); // adjust cookie name if different
+      res.status(200).json({ message: "Logout successful" });
+    });
   });
 };
 

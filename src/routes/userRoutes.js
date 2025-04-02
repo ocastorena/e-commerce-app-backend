@@ -286,6 +286,6 @@ router.post("/login", loginUser);
  *               items:
  *                 $ref: '#/components/schemas/PaymentMethod'
  */
-router.get("/logout", checkAuthentication, logoutUser);
+router.post("/logout", checkAuthentication, logoutUser);
 
 module.exports = router;
