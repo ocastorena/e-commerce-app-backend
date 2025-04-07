@@ -22,6 +22,27 @@ const getProductById = async (id) => {
   }
 };
 
+const getAllCategories = async () => {
+  try {
+    const result = await query(
+      `
+      SELECT * FROM (
+        SELECT 0 AS id, 'All' AS category
+        UNION ALL
+        SELECT row_number() OVER (ORDER BY category) AS id, category
+        FROM (SELECT DISTINCT category FROM products) AS categories
+      ) AS all_categories
+      ORDER BY id
+      `,
+      []
+    );
+    return result.rows;
+  } catch (err) {
+    console.error("Error fetching categories:", err);
+    throw err;
+  }
+};
+
 const getAllProductsByCategory = async (category) => {
   try {
     const result = await query("SELECT * FROM products WHERE category = $1", [
@@ -53,6 +74,7 @@ const updateProductById = async (
 module.exports = {
   getAllProducts,
   getProductById,
+  getAllCategories,
   getAllProductsByCategory,
   updateProductById,
 };

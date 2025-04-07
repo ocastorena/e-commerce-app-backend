@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const {
   getAllProductsController,
+  getAllCategoriesController,
   getAllProductsByCategoryController,
   getProductByIdController,
   updateProductByIdController,
@@ -64,7 +65,27 @@ router.get("/products", getAllProductsController);
  *             schema:
  *               $ref: '#/components/schemas/Product'
  */
-router.get("/products/:product_id", getProductByIdController);
+router.get("/products/:product_id(\\d+)", getProductByIdController);
+
+/**
+ * @swagger
+ * /products/categories:
+ *   get:
+ *     summary: Retrieve a list of all product categories.
+ *     tags:
+ *       - Products
+ *     responses:
+ *       '200':
+ *         description: A list of distinct product categories.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 type: string
+ */
+router.get("/products/categories", getAllCategoriesController);
+
 /**
  * @swagger
  * /products/{category}:
@@ -88,6 +109,7 @@ router.get("/products/:product_id", getProductByIdController);
  *               $ref: '#/components/schemas/Product'
  */
 router.get("/products/category/:category", getAllProductsByCategoryController);
+
 /**
  * @swagger
  * /products/{product_id}:

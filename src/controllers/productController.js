@@ -1,6 +1,7 @@
 const {
   getAllProducts,
   getProductById,
+  getAllCategories,
   getAllProductsByCategory,
   updateProductById,
 } = require("../models/productModel");
@@ -25,6 +26,16 @@ const getProductByIdController = async (req, res) => {
     res.status(200).json(product);
   } catch (err) {
     console.error("Error fetching product by ID:", err);
+    res.status(500).send("Server Error");
+  }
+};
+
+const getAllCategoriesController = async (req, res) => {
+  try {
+    const categories = await getAllCategories();
+    res.status(200).json(categories);
+  } catch (err) {
+    console.error("Err fetching categories:", err);
     res.status(500).send("Server Error");
   }
 };
@@ -59,6 +70,7 @@ const updateProductByIdController = async (req, res) => {
 module.exports = {
   getAllProductsController,
   getProductByIdController,
+  getAllCategoriesController,
   getAllProductsByCategoryController,
   updateProductByIdController,
 };

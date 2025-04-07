@@ -1,6 +1,7 @@
 const express = require("express");
 const session = require("express-session");
 const cors = require("cors");
+const path = require("path");
 
 const swaggerSpec = require("./config/swaggerConfig");
 const swaggerUi = require("swagger-ui-express");
@@ -53,6 +54,8 @@ app.use("/", userRoutes);
 app.use("/", productRoutes);
 app.use("/", cartRoutes);
 app.use("/", orderRoutes);
+
+app.use("/images", express.static(path.join(__dirname, "../images")));
 
 // serve swagger spec
 app.get("/swagger.json", function (req, res) {
