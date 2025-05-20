@@ -43,7 +43,8 @@ CREATE TABLE IF NOT EXISTS cart_items (
     product_id INT NOT NULL,
     quantity INT NOT NULL,
     FOREIGN KEY (cart_id) REFERENCES carts(cart_id),
-    FOREIGN KEY (product_id) REFERENCES products(product_id)
+    FOREIGN KEY (product_id) REFERENCES products(product_id),
+    CONSTRAINT unique_cart_item UNIQUE (cart_id, product_id)
 );
 
 -- 6. orders

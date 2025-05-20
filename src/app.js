@@ -11,6 +11,7 @@ const userRoutes = require("./routes/userRoutes");
 const productRoutes = require("./routes/productRoutes");
 const cartRoutes = require("./routes/cartRoutes");
 const orderRoutes = require("./routes/orderRoutes");
+const checkAuthentication = require("./middleware/authMiddleware");
 
 const app = express();
 const port = 3000;
@@ -51,9 +52,9 @@ app.get("/session", (req, res) => {
   }
 });
 app.use("/", userRoutes);
-app.use("/", productRoutes);
-app.use("/", cartRoutes);
-app.use("/", orderRoutes);
+app.use("/", checkAuthentication, productRoutes);
+app.use("/", checkAuthentication, cartRoutes);
+app.use("/", checkAuthentication, orderRoutes);
 
 app.use("/images", express.static(path.join(__dirname, "../images")));
 

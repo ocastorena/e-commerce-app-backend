@@ -54,7 +54,7 @@ const {
  *       '400':
  *         description: Invalid input.
  */
-router.post("/users", checkAuthentication, addUser);
+router.post("/users", addUser);
 /**
  * @swagger
  * /users/{email}:

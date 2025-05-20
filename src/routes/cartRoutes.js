@@ -3,7 +3,11 @@ const router = express.Router();
 const {
   createCartController,
   getCartByUserIdController,
+  addItemToCartController,
+  getCartItemsController,
+  updateCartItemQuantityController,
   deleteCartByUserIdController,
+  deleteItemFromCartController,
   checkoutCartController,
 } = require("../controllers/cartController");
 
@@ -79,7 +83,20 @@ router.get("/cart/:user_id", getCartByUserIdController);
  *       '404':
  *         description: Cart not found.
  */
+
+// Add item to cart endpoint
+router.post("/cart/:cart_id/items", addItemToCartController);
+
+router.get("/cart/:cart_id/items", getCartItemsController);
+
+router.put(
+  "/cart/:cart_id/items/:product_id",
+  updateCartItemQuantityController
+);
+
 router.delete("/cart/:user_id", deleteCartByUserIdController);
+
+router.delete("/cart/:cart_id/items/:product_id", deleteItemFromCartController);
 /**
  * @swagger
  * /cart/{cart_id}/checkout:

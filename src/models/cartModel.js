@@ -48,6 +48,52 @@ const getCartById = async (cart_id) => {
   }
 };
 
+const addItemToCart = async (cart_id, product_id, quantity) => {
+  try {
+    const result = await query(
+      `INSERT INTO cart_items (cart_id, product_id, quantity)
+       VALUES ($1, $2, $3)
+       ON CONFLICT (cart_id, product_id)
+       DO UPDATE SET quantity = cart_items.quantity + EXCLUDED.quantity
+       RETURNING *`,
+      [cart_id, product_id, quantity]
+    );
+    return result.rows;
+  } catch (error) {
+    console.error("Error in addItemToCart:", error);
+    throw error;
+  }
+};
+
+const getCartItems = async (cart_id) => {
+  try {
+    const result = await query(
+      `SELECT p.product_id, p.imageurl, p.name, p.price, ci.quantity, p.stock_quantity 
+       FROM cart_items ci
+       JOIN products p ON ci.product_id = p.product_id
+       WHERE ci.cart_id = $1`,
+      [cart_id]
+    );
+    return result.rows;
+  } catch (error) {
+    console.error("Error in getCartItems:", error);
+    throw error;
+  }
+};
+
+const updateCartItemQuantity = async (cart_id, product_id, quantity) => {
+  try {
+    const result = await query(
+      "UPDATE cart_items SET quantity = $3 WHERE cart_id = $1 AND product_id = $2 RETURNING *",
+      [cart_id, product_id, quantity]
+    );
+    return result.rows[0];
+  } catch (error) {
+    console.error("Error updating item quantity in cart:", error);
+    throw error;
+  }
+};
+
 const deleteCartByUserId = async (user_id) => {
   try {
     const result = await query(
@@ -61,9 +107,26 @@ const deleteCartByUserId = async (user_id) => {
   }
 };
 
+const deleteItemFromCart = async (cart_id, product_id) => {
+  try {
+    const result = await query(
+      "DELETE FROM cart_items WHERE cart_id = $1 AND product_id = $2 RETURNING *",
+      [cart_id, product_id]
+    );
+    return result.rows[0];
+  } catch (error) {
+    console.error("Error deleting item from cart:", error);
+    throw error;
+  }
+};
+
 module.exports = {
   createCart,
   getCartByUserId,
   getCartById,
+  addItemToCart,
+  getCartItems,
+  updateCartItemQuantity,
   deleteCartByUserId,
+  deleteItemFromCart,
 };

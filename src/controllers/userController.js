@@ -94,7 +94,9 @@ const loginUser = async (req, res, next) => {
       if (err) {
         return next(err);
       }
-      return res.status(200).json({ message: "Logged in successfully" });
+
+      const { password, ...safeUser } = user;
+      return res.status(200).json(safeUser);
     });
   })(req, res, next);
 };
