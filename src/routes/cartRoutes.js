@@ -6,8 +6,8 @@ const {
   addItemToCartController,
   getCartItemsController,
   updateCartItemQuantityController,
-  deleteCartByUserIdController,
   deleteItemFromCartController,
+  deleteCartItemsByCartIdController,
   checkoutCartController,
 } = require("../controllers/cartController");
 
@@ -94,9 +94,9 @@ router.put(
   updateCartItemQuantityController
 );
 
-router.delete("/cart/:user_id", deleteCartByUserIdController);
-
 router.delete("/cart/:cart_id/items/:product_id", deleteItemFromCartController);
+
+router.delete("/cart/:cart_id", deleteCartItemsByCartIdController);
 /**
  * @swagger
  * /cart/{cart_id}/checkout:

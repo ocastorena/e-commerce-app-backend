@@ -102,7 +102,7 @@ const deleteCartByUserId = async (user_id) => {
     );
     return result.rows[0];
   } catch (err) {
-    //console.error("Error deleting cart from database:", err);
+    console.error("Error deleting cart from database:", err);
     throw err;
   }
 };
@@ -120,6 +120,19 @@ const deleteItemFromCart = async (cart_id, product_id) => {
   }
 };
 
+const deleteCartItemsByCartId = async (cart_id) => {
+  try {
+    const result = await query(
+      "DELETE FROM cart_items WHERE cart_id = $1 RETURNING *",
+      [cart_id]
+    );
+    return result.rows;
+  } catch (error) {
+    console.error("Error deleting cart items from cart:", error);
+    throw error;
+  }
+};
+
 module.exports = {
   createCart,
   getCartByUserId,
@@ -129,4 +142,5 @@ module.exports = {
   updateCartItemQuantity,
   deleteCartByUserId,
   deleteItemFromCart,
+  deleteCartItemsByCartId,
 };

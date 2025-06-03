@@ -8,6 +8,7 @@ const {
   updateCartItemQuantity,
   deleteCartByUserId,
   deleteItemFromCart,
+  deleteCartItemsByCartId,
 } = require("../models/cartModel");
 
 const createCartController = async (req, res) => {
@@ -161,6 +162,27 @@ const deleteItemFromCartController = async (req, res) => {
   }
 };
 
+const deleteCartItemsByCartIdController = async (req, res) => {
+  try {
+    const { cart_id } = req.params;
+    if (!cart_id) {
+      return res.status(400).json({ message: "Missing cart_id" });
+    }
+
+    const deletedItems = await deleteCartItemsByCartId(cart_id);
+    if (!deletedItems) {
+      return res.status(404).json({ message: "cart items not found" });
+    }
+
+    return res
+      .status(200)
+      .json({ message: "All items removed from cart successfully" });
+  } catch (error) {
+    console.error("Error deleting all items from cart");
+    return res.status(500).json({ message: "Server error" });
+  }
+};
+
 module.exports = {
   createCartController,
   getCartByUserIdController,
@@ -170,4 +192,5 @@ module.exports = {
   deleteCartByUserIdController,
   checkoutCartController,
   deleteItemFromCartController,
+  deleteCartItemsByCartIdController,
 };
