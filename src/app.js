@@ -1,3 +1,4 @@
+require("dotenv").config();
 const express = require("express");
 const session = require("express-session");
 const cors = require("cors");
@@ -18,7 +19,7 @@ const port = 3000;
 
 // CORS setup
 const corsOptions = {
-  origin: true,
+  origin: process.env.FRONTEND_URL,
   credentials: true,
 };
 app.use(cors(corsOptions));
@@ -29,12 +30,13 @@ app.use(express.urlencoded({ extended: false }));
 // Express session configuration
 app.use(
   session({
-    secret: "your_secret_key",
+    secret: process.env.SESSION_SECRET,
     resave: false,
     saveUninitialized: false,
     cookie: {
-      secure: false,
+      secure: process.env.NODE_ENV === "production",
       httpOnly: true,
+      sameSite: "lax",
     },
   })
 );
