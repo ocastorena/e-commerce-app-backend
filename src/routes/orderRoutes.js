@@ -1,9 +1,12 @@
 const express = require("express");
 const router = express.Router();
 const {
-  getOrderByIdController,
+  createOrderController,
+  getOrdersByUserIdController,
   getOrderItemsByIdController,
 } = require("../controllers/orderController");
+
+router.post("/orders", createOrderController);
 
 /**
  * @swagger
@@ -27,7 +30,7 @@ const {
  *             schema:
  *               $ref: '#/components/schemas/Order'
  */
-router.get("/orders/:order_id", getOrderByIdController);
+router.get("/orders/:user_id", getOrdersByUserIdController);
 /**
  * @swagger
  * /orders/{order_id}/items:

@@ -2,9 +2,9 @@ const express = require("express");
 const router = express.Router();
 const {
   getAllProductsController,
+  getAllCategoriesController,
   getAllProductsByCategoryController,
   getProductByIdController,
-  updateProductByIdController,
 } = require("../controllers/productController");
 
 /**
@@ -64,7 +64,27 @@ router.get("/products", getAllProductsController);
  *             schema:
  *               $ref: '#/components/schemas/Product'
  */
-router.get("/products/:product_id", getProductByIdController);
+router.get("/products/:product_id(\\d+)", getProductByIdController);
+
+/**
+ * @swagger
+ * /products/categories:
+ *   get:
+ *     summary: Retrieve a list of all product categories.
+ *     tags:
+ *       - Products
+ *     responses:
+ *       '200':
+ *         description: A list of distinct product categories.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 type: string
+ */
+router.get("/products/categories", getAllCategoriesController);
+
 /**
  * @swagger
  * /products/{category}:
@@ -88,56 +108,5 @@ router.get("/products/:product_id", getProductByIdController);
  *               $ref: '#/components/schemas/Product'
  */
 router.get("/products/category/:category", getAllProductsByCategoryController);
-/**
- * @swagger
- * /products/{product_id}:
- *   put:
- *     summary: Update an existing product by Id.
- *     tags:
- *       - Products
- *     parameters:
- *       - in: path
- *         name: product_id
- *         required: true
- *         schema:
- *           type: integer
- *         description: The ID of the product.
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             properties:
- *               name:
- *                 type: string
- *               price:
- *                 type: number
- *                 format: float
- *               description:
- *                 type: string
- *               stock_quantity:
- *                 type: integer
- *               category:
- *                 type: string
- *             example:
- *               name: apple
- *               price: 1.99
- *               description: "Red Apple"
- *               stock_quantity: 10
- *               category: "fruit"
- *     responses:
- *       '200':
- *         description: Product updated successfully.
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/Product'
- *       '400':
- *         description: Invalid input.
- *       '404':
- *         description: User not found.
- */
-router.put("/products/:product_id", updateProductByIdController);
 
 module.exports = router;

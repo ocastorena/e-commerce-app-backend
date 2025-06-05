@@ -1,58 +1,40 @@
-const { query } = require("../config/db");
+const axios = require("axios");
 
-const getAllProducts = async () => {
+const DUMMYJSON_BASE = "https://dummyjson.com/products";
+
+const fetchFromDummyJson = async (endpoint) => {
   try {
-    const result = await query("SELECT * FROM products", []);
-    return result.rows;
+    const response = await axios.get(`${DUMMYJSON_BASE}${endpoint}`);
+    return response.data;
   } catch (err) {
-    console.error("Error fetching products:", err);
+    console.error(`Error fetching ${endpoint}:`, err);
     throw err;
   }
+};
+
+const getAllProducts = async () => {
+  const data = await fetchFromDummyJson("?limit=100");
+  return data.products;
 };
 
 const getProductById = async (id) => {
-  try {
-    const result = await query("SELECT * FROM products WHERE product_id = $1", [
-      id,
-    ]);
-    return result.rows[0];
-  } catch (err) {
-    console.error("Error fetching product by id:", err);
-    throw err;
-  }
+  return await fetchFromDummyJson(`/${id}`);
+};
+
+const getAllCategories = async () => {
+  return await fetchFromDummyJson("/categories");
 };
 
 const getAllProductsByCategory = async (category) => {
-  try {
-    const result = await query("SELECT * FROM products WHERE category = $1", [
-      category,
-    ]);
-    return result.rows;
-  } catch (err) {
-    console.error("Error fetching products by category:", err);
-    throw err;
-  }
-};
-
-const updateProductById = async (
-  id,
-  { name, price, description, stock_quantity, category }
-) => {
-  try {
-    const result = await query(
-      "UPDATE products SET name = $1, price = $2, description = $3, stock_quantity = $4, category = $5 WHERE product_id = $6 RETURNING *",
-      [name, price, description, stock_quantity, category, id]
-    );
-    return result.rows[0];
-  } catch (err) {
-    console.error("Error updating product in database:", err);
-    throw err;
-  }
+  const data = await fetchFromDummyJson(
+    `/category/${encodeURIComponent(category)}`
+  );
+  return data.products;
 };
 
 module.exports = {
   getAllProducts,
   getProductById,
+  getAllCategories,
   getAllProductsByCategory,
-  updateProductById,
 };

@@ -1,4 +1,5 @@
 const { query } = require("../config/db");
+const { createCart } = require("./cartModel");
 
 const createUser = async (username, password, email, address) => {
   try {
@@ -14,9 +15,14 @@ const createUser = async (username, password, email, address) => {
       "INSERT INTO users (username, password, email, address) VALUES ($1, $2, $3, $4) RETURNING *",
       [username, password, email, address]
     );
+
+    if (result && result.rowCount > 0) {
+      await createCart(result.rows[0].user_id);
+    }
+
     return result.rows[0];
   } catch (err) {
-    //console.error("Error creating user in database:", err);
+    console.error("Error creating user in database:", err);
     throw err;
   }
 };
