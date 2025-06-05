@@ -94,7 +94,7 @@ const loginUser = async (req, res, next) => {
       if (err) {
         return next(err);
       }
-
+      console.log("Session after login:", req.session);
       const { password, ...safeUser } = user;
       return res.status(200).json(safeUser);
     });
