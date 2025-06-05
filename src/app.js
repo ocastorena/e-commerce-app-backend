@@ -37,7 +37,6 @@ app.use(
       secure: process.env.NODE_ENV === "production",
       httpOnly: true,
       sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
-      domain: ".onrender.com",
     },
   })
 );
@@ -69,6 +68,16 @@ app.get("/swagger.json", function (req, res) {
 
 // serve swagger ui
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+
+app.get("/test-cookie", (req, res) => {
+  res.cookie("testcookie", "testvalue", {
+    secure: true,
+    httpOnly: true,
+    sameSite: "none",
+    // domain: ".onrender.com", // try with and without this
+  });
+  res.send("Test cookie set");
+});
 
 app.listen(port, () => {
   console.log(`Server app listening on port ${port}`);
