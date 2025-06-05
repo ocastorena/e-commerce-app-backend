@@ -3,7 +3,6 @@ const {
   getProductById,
   getAllCategories,
   getAllProductsByCategory,
-  updateProductById,
 } = require("../models/productModel");
 
 const getAllProductsController = async (req, res) => {
@@ -33,7 +32,7 @@ const getProductByIdController = async (req, res) => {
 const getAllCategoriesController = async (req, res) => {
   try {
     const categories = await getAllCategories();
-    res.status(200).json(categories);
+    res.status(200).json([{ slug: "All", name: "All" }, ...categories]);
   } catch (err) {
     console.error("Err fetching categories:", err);
     res.status(500).send("Server Error");
@@ -51,26 +50,9 @@ const getAllProductsByCategoryController = async (req, res) => {
   }
 };
 
-const updateProductByIdController = async (req, res) => {
-  try {
-    const productId = req.params.product_id;
-    const productData = req.body;
-    const updatedProduct = await updateProductById(productId, productData);
-
-    if (!updatedProduct) {
-      return res.status(404).send("Product not found");
-    }
-    res.status(200).json(updatedProduct);
-  } catch (err) {
-    console.error("Error updating product by ID:", err);
-    res.status(500).send("Server Error");
-  }
-};
-
 module.exports = {
   getAllProductsController,
   getProductByIdController,
   getAllCategoriesController,
   getAllProductsByCategoryController,
-  updateProductByIdController,
 };

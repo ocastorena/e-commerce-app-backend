@@ -1,4 +1,5 @@
 const { query } = require("../config/db");
+const axios = require("axios");
 
 const createCart = async (user_id) => {
   try {
@@ -67,14 +68,27 @@ const addItemToCart = async (cart_id, product_id, quantity) => {
 
 const getCartItems = async (cart_id) => {
   try {
+    // Get all cart items for this cart_id
     const result = await query(
-      `SELECT p.product_id, p.imageurl, p.name, p.price, ci.quantity, p.stock_quantity 
-       FROM cart_items ci
-       JOIN products p ON ci.product_id = p.product_id
-       WHERE ci.cart_id = $1`,
+      "SELECT product_id, quantity FROM cart_items WHERE cart_id = $1",
       [cart_id]
     );
-    return result.rows;
+    const cartItems = result.rows;
+
+    // Fetch product details from DummyJSON for each item
+    const detailedItems = await Promise.all(
+      cartItems.map(async (item) => {
+        const product = await axios.get(
+          `https://dummyjson.com/products/${item.product_id}`
+        );
+        return {
+          ...item,
+          product: product.data, // includes name, price, image, etc.
+        };
+      })
+    );
+
+    return detailedItems;
   } catch (error) {
     console.error("Error in getCartItems:", error);
     throw error;

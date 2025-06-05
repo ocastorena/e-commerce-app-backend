@@ -5,7 +5,6 @@ const {
   getAllCategoriesController,
   getAllProductsByCategoryController,
   getProductByIdController,
-  updateProductByIdController,
 } = require("../controllers/productController");
 
 /**
@@ -109,57 +108,5 @@ router.get("/products/categories", getAllCategoriesController);
  *               $ref: '#/components/schemas/Product'
  */
 router.get("/products/category/:category", getAllProductsByCategoryController);
-
-/**
- * @swagger
- * /products/{product_id}:
- *   put:
- *     summary: Update an existing product by Id.
- *     tags:
- *       - Products
- *     parameters:
- *       - in: path
- *         name: product_id
- *         required: true
- *         schema:
- *           type: integer
- *         description: The ID of the product.
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             properties:
- *               name:
- *                 type: string
- *               price:
- *                 type: number
- *                 format: float
- *               description:
- *                 type: string
- *               stock_quantity:
- *                 type: integer
- *               category:
- *                 type: string
- *             example:
- *               name: apple
- *               price: 1.99
- *               description: "Red Apple"
- *               stock_quantity: 10
- *               category: "fruit"
- *     responses:
- *       '200':
- *         description: Product updated successfully.
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/Product'
- *       '400':
- *         description: Invalid input.
- *       '404':
- *         description: User not found.
- */
-router.put("/products/:product_id", updateProductByIdController);
 
 module.exports = router;
