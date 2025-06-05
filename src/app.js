@@ -1,6 +1,7 @@
 require("dotenv").config();
 const express = require("express");
 const session = require("express-session");
+const pgSession = require("connect-pg-simple")(session);
 const cors = require("cors");
 const path = require("path");
 
@@ -13,6 +14,7 @@ const productRoutes = require("./routes/productRoutes");
 const cartRoutes = require("./routes/cartRoutes");
 const orderRoutes = require("./routes/orderRoutes");
 const checkAuthentication = require("./middleware/authMiddleware");
+const { pool } = require("./config/db"); // Use your existing pg Pool
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -30,6 +32,11 @@ app.use(express.urlencoded({ extended: false }));
 // Express session configuration
 app.use(
   session({
+    store: new pgSession({
+      pool: pool, // Reuse your existing pg Pool
+      tableName: "session", // Optional: defaults to "session"
+      // conString: process.env.DATABASE_URL, // Alternative if you want to use a connection string
+    }),
     secret: process.env.SESSION_SECRET,
     resave: false,
     saveUninitialized: false,

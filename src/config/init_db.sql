@@ -56,3 +56,15 @@ CREATE TABLE IF NOT EXISTS order_items (
     unit_price DECIMAL(10, 2),
     FOREIGN KEY (order_id) REFERENCES orders(order_id)
 );
+
+-- 7. session
+CREATE TABLE IF NOT EXISTS "session" (
+  "sid" varchar NOT NULL COLLATE "default",
+  "sess" json NOT NULL,
+  "expire" timestamp(6) NOT NULL
+)
+WITH (OIDS=FALSE);
+
+ALTER TABLE "session" ADD CONSTRAINT "session_pkey" PRIMARY KEY ("sid");
+
+CREATE INDEX "IDX_session_expire" ON "session" ("expire");
