@@ -92,11 +92,18 @@ const loginUser = async (req, res, next) => {
     }
     req.logIn(user, (err) => {
       if (err) {
+        console.error("req.logIn error:", err);
         return next(err);
       }
       console.log("Session after login:", req.session);
-      const { password, ...safeUser } = user;
-      return res.status(200).json(safeUser);
+      req.session.save((err) => {
+        if (err) {
+          console.error("Session save error:", err);
+          return next(err);
+        }
+        const { password, ...safeUser } = user;
+        return res.status(200).json(safeUser);
+      });
     });
   })(req, res, next);
 };
