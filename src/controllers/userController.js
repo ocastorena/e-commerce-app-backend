@@ -102,7 +102,8 @@ const loginUser = async (req, res, next) => {
           return next(err);
         }
         const { password, ...safeUser } = user;
-        return res.status(200).json(safeUser);
+        // Send the response and end the request explicitly
+        res.status(200).json(safeUser);
       });
     });
   })(req, res, next);
