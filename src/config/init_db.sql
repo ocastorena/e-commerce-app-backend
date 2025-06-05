@@ -54,5 +54,5 @@ CREATE TABLE IF NOT EXISTS order_items (
     product_id INT NOT NULL,
     quantity INT NOT NULL,
     unit_price DECIMAL(10, 2),
-    FOREIGN KEY (order_id) REFERENCES orders(order_id),
+    FOREIGN KEY (order_id) REFERENCES orders(order_id)
 );

@@ -15,7 +15,7 @@ const orderRoutes = require("./routes/orderRoutes");
 const checkAuthentication = require("./middleware/authMiddleware");
 
 const app = express();
-const port = 3000;
+const port = process.env.PORT || 3000;
 
 // CORS setup
 const corsOptions = {
