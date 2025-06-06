@@ -17,6 +17,10 @@ const checkAuthentication = require("./middleware/authMiddleware");
 const { pool } = require("./config/db"); // Use your existing pg Pool
 
 const app = express();
+
+// Trust the first proxy (Render)
+app.set('trust proxy', 1);
+
 const port = process.env.PORT || 3000;
 
 // CORS setup
@@ -33,9 +37,8 @@ app.use(express.urlencoded({ extended: false }));
 app.use(
   session({
     store: new pgSession({
-      pool: pool, // Reuse your existing pg Pool
-      tableName: "session", // Optional: defaults to "session"
-      // conString: process.env.DATABASE_URL, // Alternative if you want to use a connection string
+      pool: pool,
+      tableName: "session",
     }),
     secret: process.env.SESSION_SECRET,
     resave: false,
@@ -48,7 +51,6 @@ app.use(
   })
 );
 
-// Initialize Passport and session
 app.use(passport.initialize());
 app.use(passport.session());
 

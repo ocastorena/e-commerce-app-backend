@@ -103,7 +103,6 @@ const loginUser = async (req, res, next) => {
         }
         const { password, ...safeUser } = user;
         res.status(200).json(safeUser);
-        res.end(); // Not usually needed with res.json, but you can try if all else fails
       });
     });
   })(req, res, next);
